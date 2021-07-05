@@ -1,41 +1,38 @@
-import { useState } from "react";
-import Form from "./Components/Form";
-import Table from "./Components/Table";
+import { useState, useEffect } from 'react';
+import Form from './Components/Form';
+import Table from './Components/Table';
 
 const App = () => {
-  const [ExpenseArray, setExpenseArray] = useState(
-    JSON.parse(localStorage.getItem("ExpenseArray")) || []
-  );
+  const [expenseArray, setExpenseArray] = useState([]);
 
   const addExpense = (newExpense) => {
-    ExpenseArray.length
-      ? setExpenseArray((expense) => [...expense, newExpense])
-      : setExpenseArray([newExpense]);
-
-    ExpenseArray.length
-      ? localStorage.setItem(
-          "ExpenseArray",
-          JSON.stringify([...ExpenseArray, newExpense])
-        )
-      : localStorage.setItem("ExpenseArray", JSON.stringify([newExpense]));
+    setExpenseArray([...expenseArray, newExpense]);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem('expenseArray'));
+    setExpenseArray(JSON.parse(localStorage.getItem('expenseArray')));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('expenseArray', JSON.stringify(expenseArray));
+  }, [expenseArray]);
+
   const handleDelete = (id) => {
-    const newArray = ExpenseArray.filter((expense) => expense.id !== id);
+    const newArray = expenseArray.filter((expense) => expense.id !== id);
     setExpenseArray(newArray);
-    localStorage.setItem("ExpenseArray", JSON.stringify(newArray));
   };
 
   return (
-    <div className="App d-grid gap-5">
-      <div className="text-center">
+    <div className='App d-grid gap-5'>
+      <div className='text-center'>
         <h1>Expense Tracker</h1>
         <small>created by N. McCraw</small>
       </div>
-      <div className="container">
-        <div className="row justify-content-evenly">
+      <div className='container'>
+        <div className='row justify-content-evenly'>
           <Form addExpense={addExpense} />
-          <Table ExpenseArray={ExpenseArray} handleDelete={handleDelete} />
+          <Table expenseArray={expenseArray} handleDelete={handleDelete} />
         </div>
       </div>
     </div>
